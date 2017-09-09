@@ -1,11 +1,18 @@
 {
   "parser": "babel-eslint",
   "extends": "standard",
-  "plugins": ["babel"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "plugins": ["babel", "promise"],
   "env": {
     "node": true
   },
   "rules": {
+    "semi": [2, "always"],
+    "key-spacing": "off",
     "max-len": [2, 120, 2]
   }
 }

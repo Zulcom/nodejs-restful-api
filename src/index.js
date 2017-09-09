@@ -1,12 +1,12 @@
-import express from 'express'
+import express from 'express';
 
-const app = express()
+const app = express();
 
-const PROT = process.env.PROT || 3000
+const PROT = process.env.PROT || 3000;
 
 app.listen(PROT, err => {
   if (err) {
-    throw err
+    throw err;
   } else {
     console.log(`
       ---
@@ -14,6 +14,6 @@ app.listen(PROT, err => {
       ---
       Runing on ${process.env.NODE_ENV}
       ---
-    `)
+    `);
   }
-})
+});
