@@ -1,5 +1,8 @@
-const nodeExternals = require('webpack-node-externals');
+'use strict';
+
 const path = require('path');
+const nodeExternals = require('webpack-node-externals');
+const CleanPlugin = require('./utils/clean-plugin');
 
 module.exports = {
   target: 'node',
@@ -20,5 +23,10 @@ module.exports = {
         use: 'babel-loader'
       }
     ]
-  }
+  },
+  plugins: [
+    new CleanPlugin({
+      files: ['dist/*']
+    })
+  ]
 };
