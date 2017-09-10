@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import validator from 'validator';
-import passwordRegExp from './user.validator';
+import { passwordRegExp } from './user.validator';
 
 const userSchema = new Schema({
   email: {
