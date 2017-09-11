@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import validate from 'express-validation';
 import { sigup } from './user.validator';
-// import validator from './user.validator';
 
 import * as userControllers from './user.controllers';
 

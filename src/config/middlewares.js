@@ -6,6 +6,7 @@ import morgan from 'morgan';
 const isDev = process.env.NODE_ENV === 'development';
 const isProd = process.env.NODE_ENV === 'production';
 
+// apply middlewares
 export default app => {
   if (isProd) {
     app.use(compression());

@@ -4,6 +4,7 @@ import constants from './constants';
 // remove mongoose promise warn
 mongoose.Promise = global.Promise;
 
+// connect or createConnection for MongoDB URL
 try {
   mongoose.connect(constants.MONGO_URL, { useMongoClient: true });
 } catch (err) {

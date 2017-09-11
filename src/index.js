@@ -4,16 +4,20 @@ import constants from './config/constants';
 import './config/database';
 import apiRoutes from './modules';
 
+// create app
 const app = express();
 
+// app middlewares apply
 middlewares(app);
 
+// app routes
 app.get('/', (req, res) => {
   res.send('Hello Guys!');
 });
 
 apiRoutes(app);
 
+// server runing
 app.listen(constants.PORT, err => {
   if (err) {
     throw err;
