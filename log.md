@@ -18,3 +18,9 @@
 - `+` create sigup API add user
 - `+` create router and routes
 - `+` create request validator
+
+## three
+- `+` bcrypt password hash
+- `-` apply passport authentication middleware
+- `-` set local strategies
+- `-` authenticate user Email and password

@@ -80,6 +80,8 @@ module.exports = require("express");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+// MongoDB URL and app env
+
 const devConfig = {
   MONGO_URL: 'mongodb://localhost:27017/node-restful-dev'
 };
@@ -171,16 +173,20 @@ var _modules2 = _interopRequireDefault(_modules);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// create app
 const app = (0, _express2.default)();
 
+// app middlewares apply
 (0, _middlewares2.default)(app);
 
+// app routes
 app.get('/', (req, res) => {
   res.send('Hello Guys!');
 });
 
 (0, _modules2.default)(app);
 
+// server runing
 app.listen(_constants2.default.PORT, err => {
   if (err) {
     throw err;
@@ -226,6 +232,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const isDev = process.env.NODE_ENV === 'development';
 const isProd = process.env.NODE_ENV === 'production';
+
+// apply middlewares
 
 exports.default = app => {
   if (isProd) {
@@ -285,6 +293,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // remove mongoose promise warn
 _mongoose2.default.Promise = global.Promise;
 
+// connect or createConnection for MongoDB URL
 try {
   _mongoose2.default.connect(_constants2.default.MONGO_URL, { useMongoClient: true });
 } catch (err) {
@@ -315,6 +324,7 @@ var _user2 = _interopRequireDefault(_user);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// modules routes
 exports.default = app => {
   app.use('/api/v1/users', _user2.default);
 };
@@ -347,7 +357,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const routes = new _express.Router();
-// import validator from './user.validator';
 
 routes.post('/sigup', (0, _expressValidation2.default)(_user.sigup), userControllers.sigup);
 
@@ -413,6 +422,8 @@ var _validator2 = _interopRequireDefault(_validator);
 
 var _user = __webpack_require__(3);
 
+var _bcryptNodejs = __webpack_require__(18);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const userSchema = new _mongoose.Schema({
@@ -448,6 +459,21 @@ const userSchema = new _mongoose.Schema({
   }
 });
 
+// Schema save modified password
+userSchema.pre('save', function (next) {
+  if (this.isModified('password')) {
+    this.password = this._hashPassword(this.password);
+  }
+  next();
+});
+
+userSchema.methods = {
+  // password bcrypt hash password
+  _hashPassword(password) {
+    return (0, _bcryptNodejs.hashSync)(password);
+  }
+};
+
 exports.default = _mongoose2.default.model('User', userSchema);
 
 /***/ }),
@@ -455,6 +481,12 @@ exports.default = _mongoose2.default.model('User', userSchema);
 /***/ (function(module, exports) {
 
 module.exports = require("validator");
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports) {
+
+module.exports = require("bcrypt-nodejs");
 
 /***/ })
 /******/ ]);

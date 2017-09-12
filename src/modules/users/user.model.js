@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 import validator from 'validator';
 import { passwordRegExp } from './user.validator';
+import { hashSync } from 'bcrypt-nodejs';
 
 const userSchema = new Schema({
   email: {
@@ -34,5 +35,20 @@ const userSchema = new Schema({
     }
   }
 });
+
+// Schema save modified password
+userSchema.pre('save', function (next) {
+  if (this.isModified('password')) {
+    this.password = this._hashPassword(this.password);
+  }
+  next();
+});
+
+userSchema.methods = {
+  // password bcrypt hash password
+  _hashPassword (password) {
+    return hashSync(password);
+  }
+};
 
 export default mongoose.model('User', userSchema);
