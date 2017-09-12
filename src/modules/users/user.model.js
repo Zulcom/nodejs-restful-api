@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 import validator from 'validator';
 import { passwordRegExp } from './user.validator';
-import { hashSync } from 'bcrypt-nodejs';
+import { hashSync, compareSync } from 'bcrypt-nodejs';
 
 const userSchema = new Schema({
   email: {
@@ -48,6 +48,10 @@ userSchema.methods = {
   // password bcrypt hash password
   _hashPassword (password) {
     return hashSync(password);
+  },
+  // compare passsword authenticate user info
+  comparePassword (password) {
+    return compareSync(password, this.password);
   }
 };
 

@@ -8,3 +8,9 @@ export async function sigup (req, res) {
     return res.status(400).json(error);
   }
 };
+
+export function login (req, res, next) {
+  res.status(200).json(req.user);
+
+  return next();
+};

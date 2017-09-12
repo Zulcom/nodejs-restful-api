@@ -21,6 +21,7 @@
 
 ## three
 - `+` bcrypt password hash
-- `-` apply passport authentication middleware
-- `-` set local strategies
-- `-` authenticate user Email and password
+- `+` apply passport authentication middleware
+- `+` set local strategies
+- `+` authenticate user Email and password
+- `+` create user login routes
