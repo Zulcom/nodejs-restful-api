@@ -2,6 +2,9 @@ import mongoose, { Schema } from 'mongoose';
 import validator from 'validator';
 import { passwordRegExp } from './user.validator';
 import { hashSync, compareSync } from 'bcrypt-nodejs';
+import jwtToken from 'jsonwebtoken';
+
+import constants from '../../config/constants';
 
 const userSchema = new Schema({
   email: {
@@ -52,6 +55,23 @@ userSchema.methods = {
   // compare passsword authenticate user info
   comparePassword (password) {
     return compareSync(password, this.password);
+  },
+  // sign jwt web token for user id
+  createToken () {
+    return jwtToken.sign(
+      {
+        _id: this.id
+      },
+      constants.JWT_SECRET
+    );
+  },
+  // login response json data
+  toAuthJSON () {
+    return {
+      _id: this.id,
+      userName: this.userName,
+      token: `JWT ${this.createToken()}`
+    };
   }
 };
 

@@ -31,11 +31,12 @@ const localStrategy = new LocalStrategy(
 
 // jwt strategy
 const jwtOptions = {
-  jwtFromRequest: ExtractJwt.fromHeader('authorization'),
+  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
   secretOrKey: constants.JWT_SECRET
 };
 
 const jwtStrategy = new JWTStrategy(jwtOptions, async (payload, done) => {
+  console.log(123);
   try {
     const user = User.findById(payload._id);
 

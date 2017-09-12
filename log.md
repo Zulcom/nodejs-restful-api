@@ -29,5 +29,5 @@
 ## four
 - `+` create JWT authenticate strategy
 - `+` apply strategy
-- `-` sign user login JWT token
+- `+` sign user login JWT token
 - `+` set test page request authenticate

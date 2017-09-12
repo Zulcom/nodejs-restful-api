@@ -10,7 +10,7 @@ export async function sigup (req, res) {
 };
 
 export function login (req, res, next) {
-  res.status(200).json(req.user);
+  res.status(200).json(req.user.toAuthJSON());
 
   return next();
 };
