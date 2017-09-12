@@ -25,3 +25,9 @@
 - `+` set local strategies
 - `+` authenticate user Email and password
 - `+` create user login routes
+
+## four
+- `+` create JWT authenticate strategy
+- `+` apply strategy
+- `-` sign user login JWT token
+- `+` set test page request authenticate

@@ -1,7 +1,8 @@
 // MongoDB URL and app env
 
 const devConfig = {
-  MONGO_URL: 'mongodb://localhost:27017/node-restful-dev'
+  MONGO_URL: 'mongodb://localhost:27017/node-restful-dev',
+  JWT_SECRET: 'jwtsecret'
 };
 
 const testConfig = {
