@@ -36,7 +36,6 @@ const jwtOptions = {
 };
 
 const jwtStrategy = new JWTStrategy(jwtOptions, async (payload, done) => {
-  console.log(123);
   try {
     const user = User.findById(payload._id);
 

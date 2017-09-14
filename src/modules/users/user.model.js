@@ -3,6 +3,7 @@ import validator from 'validator';
 import { passwordRegExp } from './user.validator';
 import { hashSync, compareSync } from 'bcrypt-nodejs';
 import jwtToken from 'jsonwebtoken';
+import uniqueValidator from 'mongoose-unique-validator';
 
 import constants from '../../config/constants';
 
@@ -37,6 +38,10 @@ const userSchema = new Schema({
       message: '{VALUE} is not valid!'
     }
   }
+}, { timestamps: true });
+
+userSchema.plugin(uniqueValidator, {
+  message: '{VALUE} already taken!'
 });
 
 // Schema save modified password

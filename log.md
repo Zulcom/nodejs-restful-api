@@ -62,3 +62,6 @@
 - `-` create favorite post event routes
 - `-` users favorite post event inc or dec post favoriteCount
 - `-` current login user show this favorite post true/false status
+
+## date
+OMG, today is so bad! I just finished a little bit of work! 😓

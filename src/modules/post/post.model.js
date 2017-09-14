@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
-import slug from 'node-slug';
+import slug from 'slug';
+import uniqueValidator from 'mongoose-unique-validator';
 
 const PostSchema = new Schema({
   title: {
@@ -30,15 +31,32 @@ const PostSchema = new Schema({
   }
 }, { timestamps: true });
 
-PostSchema.pre('validator', function (next) {
-  this.title = this._slugify(this.title);
+// set schema unique validator message
+PostSchema.plugin(uniqueValidator, {
+  message: '{VALUE} already taken!'
+});
+
+// validate pre callback set post slug
+PostSchema.pre('validate', function (next) {
+  this.slug = this._slugify(this.title);
 
   next();
 });
 
 PostSchema.methods = {
+  // post title transform slug
   _slugify (title) {
     return slug(title);
+  }
+};
+
+PostSchema.statics = {
+  // use static call Schema methods
+  createPost (post, user) {
+    return this.create({
+      ...post,
+      user
+    });
   }
 };
 

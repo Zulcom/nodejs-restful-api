@@ -22,11 +22,12 @@
     "joi": "^10.6.0",
     "jsonwebtoken": "^8.0.0",
     "mongoose": "^4.11.10",
-    "node-slug": "^0.0.2",
+    "mongoose-unique-validator": "^1.0.6",
     "nodemon": "^1.12.0",
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.0",
     "passport-local": "^1.0.0",
+    "slug": "^0.9.1",
     "validator": "^8.2.0"
   },
   "devDependencies": {

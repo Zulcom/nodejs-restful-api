@@ -2,7 +2,10 @@ import Post from './post.model';
 
 export async function createPost (req, res) {
   try {
-    const post = await Post.create(req.body);
+    // this is user Schema There might be better ways to get it
+    const userID = req.user._conditions._id;
+
+    const post = await Post.createPost(req.body, userID);
 
     return res.status(201).json(post);
   } catch (err) {
