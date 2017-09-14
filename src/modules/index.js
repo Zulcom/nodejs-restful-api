@@ -1,10 +1,8 @@
 import userRoutes from './users/user.routes';
-import { authJwt } from '../services/auth.services';
+import postRoutes from './post/post.routes';
 
 // modules routes
 export default app => {
   app.use('/api/v1/users', userRoutes);
-  app.get('/hello', authJwt, (req, res) => {
-    res.send('hello guys');
-  });
+  app.use('/api/v1/posts', postRoutes);
 };

@@ -61,7 +61,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -116,13 +116,13 @@ module.exports = require("express");
 /* 2 */
 /***/ (function(module, exports) {
 
-module.exports = require("passport");
+module.exports = require("mongoose");
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports) {
 
-module.exports = require("mongoose");
+module.exports = require("passport");
 
 /***/ }),
 /* 4 */
@@ -136,7 +136,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.sigup = exports.passwordRegExp = undefined;
 
-var _joi = __webpack_require__(17);
+var _joi = __webpack_require__(16);
 
 var _joi2 = _interopRequireDefault(_joi);
 
@@ -163,89 +163,8 @@ const sigup = exports.sigup = {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.authJwt = exports.authLocal = undefined;
 
-var _passport = __webpack_require__(2);
-
-var _passport2 = _interopRequireDefault(_passport);
-
-var _passportLocal = __webpack_require__(18);
-
-var _passportLocal2 = _interopRequireDefault(_passportLocal);
-
-var _passportJwt = __webpack_require__(19);
-
-var _user = __webpack_require__(6);
-
-var _user2 = _interopRequireDefault(_user);
-
-var _constants = __webpack_require__(0);
-
-var _constants2 = _interopRequireDefault(_constants);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// Local strategy email replace default username
-const localOptions = {
-  usernameField: 'email'
-};
-
-// local user login strategy
-const localStrategy = new _passportLocal2.default(localOptions, async (email, password, done) => {
-  try {
-    const user = await _user2.default.findOne({ email });
-    if (!user) {
-      return done(null, false);
-    } else if (!user.comparePassword(password)) {
-      return done(null, false);
-    }
-
-    return done(null, user);
-  } catch (err) {
-    return done(err, false);
-  }
-});
-
-// jwt strategy
-const jwtOptions = {
-  jwtFromRequest: _passportJwt.ExtractJwt.fromAuthHeaderWithScheme('jwt'),
-  secretOrKey: _constants2.default.JWT_SECRET
-};
-
-const jwtStrategy = new _passportJwt.Strategy(jwtOptions, async (payload, done) => {
-  console.log(123);
-  try {
-    const user = _user2.default.findById(payload._id);
-
-    if (!user) {
-      return done(null, false);
-    }
-
-    return done(null, user);
-  } catch (err) {
-    return done(err, false);
-  }
-});
-
-// passport apply local strategy
-_passport2.default.use(localStrategy);
-_passport2.default.use(jwtStrategy);
-
-const authLocal = exports.authLocal = _passport2.default.authenticate('local', { session: false });
-const authJwt = exports.authJwt = _passport2.default.authenticate('jwt', { session: false });
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _mongoose = __webpack_require__(3);
+var _mongoose = __webpack_require__(2);
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
 
@@ -336,7 +255,7 @@ userSchema.methods = {
 exports.default = _mongoose2.default.model('User', userSchema);
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -346,7 +265,7 @@ var _express = __webpack_require__(1);
 
 var _express2 = _interopRequireDefault(_express);
 
-var _middlewares = __webpack_require__(8);
+var _middlewares = __webpack_require__(7);
 
 var _middlewares2 = _interopRequireDefault(_middlewares);
 
@@ -354,9 +273,9 @@ var _constants = __webpack_require__(0);
 
 var _constants2 = _interopRequireDefault(_constants);
 
-__webpack_require__(13);
+__webpack_require__(12);
 
-var _modules = __webpack_require__(14);
+var _modules = __webpack_require__(13);
 
 var _modules2 = _interopRequireDefault(_modules);
 
@@ -391,7 +310,7 @@ app.listen(_constants2.default.PORT, err => {
 });
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -401,23 +320,23 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _bodyParser = __webpack_require__(9);
+var _bodyParser = __webpack_require__(8);
 
 var _bodyParser2 = _interopRequireDefault(_bodyParser);
 
-var _compression = __webpack_require__(10);
+var _compression = __webpack_require__(9);
 
 var _compression2 = _interopRequireDefault(_compression);
 
-var _helmet = __webpack_require__(11);
+var _helmet = __webpack_require__(10);
 
 var _helmet2 = _interopRequireDefault(_helmet);
 
-var _morgan = __webpack_require__(12);
+var _morgan = __webpack_require__(11);
 
 var _morgan2 = _interopRequireDefault(_morgan);
 
-var _passport = __webpack_require__(2);
+var _passport = __webpack_require__(3);
 
 var _passport2 = _interopRequireDefault(_passport);
 
@@ -444,37 +363,37 @@ exports.default = app => {
 };
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports) {
 
 module.exports = require("body-parser");
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports) {
 
 module.exports = require("compression");
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports) {
 
 module.exports = require("helmet");
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports) {
 
 module.exports = require("morgan");
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _mongoose = __webpack_require__(3);
+var _mongoose = __webpack_require__(2);
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
 
@@ -502,7 +421,7 @@ _mongoose2.default.connection.on('error', error => {
 });
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -512,24 +431,24 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _user = __webpack_require__(15);
+var _user = __webpack_require__(14);
 
 var _user2 = _interopRequireDefault(_user);
 
-var _auth = __webpack_require__(5);
+var _post = __webpack_require__(24);
+
+var _post2 = _interopRequireDefault(_post);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // modules routes
 exports.default = app => {
   app.use('/api/v1/users', _user2.default);
-  app.get('/hello', _auth.authJwt, (req, res) => {
-    res.send('hello guys');
-  });
+  app.use('/api/v1/posts', _post2.default);
 };
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -541,13 +460,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _express = __webpack_require__(1);
 
-var _expressValidation = __webpack_require__(16);
+var _expressValidation = __webpack_require__(15);
 
 var _expressValidation2 = _interopRequireDefault(_expressValidation);
 
 var _user = __webpack_require__(4);
 
-var _auth = __webpack_require__(5);
+var _auth = __webpack_require__(17);
 
 var _user2 = __webpack_require__(23);
 
@@ -565,16 +484,97 @@ routes.post('/login', _auth.authLocal, userControllers.login);
 exports.default = routes;
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports) {
 
 module.exports = require("express-validation");
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports) {
 
 module.exports = require("joi");
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.authJwt = exports.authLocal = undefined;
+
+var _passport = __webpack_require__(3);
+
+var _passport2 = _interopRequireDefault(_passport);
+
+var _passportLocal = __webpack_require__(18);
+
+var _passportLocal2 = _interopRequireDefault(_passportLocal);
+
+var _passportJwt = __webpack_require__(19);
+
+var _user = __webpack_require__(5);
+
+var _user2 = _interopRequireDefault(_user);
+
+var _constants = __webpack_require__(0);
+
+var _constants2 = _interopRequireDefault(_constants);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Local strategy email replace default username
+const localOptions = {
+  usernameField: 'email'
+};
+
+// local user login strategy
+const localStrategy = new _passportLocal2.default(localOptions, async (email, password, done) => {
+  try {
+    const user = await _user2.default.findOne({ email });
+    if (!user) {
+      return done(null, false);
+    } else if (!user.comparePassword(password)) {
+      return done(null, false);
+    }
+
+    return done(null, user);
+  } catch (err) {
+    return done(err, false);
+  }
+});
+
+// jwt strategy
+const jwtOptions = {
+  jwtFromRequest: _passportJwt.ExtractJwt.fromAuthHeaderWithScheme('jwt'),
+  secretOrKey: _constants2.default.JWT_SECRET
+};
+
+const jwtStrategy = new _passportJwt.Strategy(jwtOptions, async (payload, done) => {
+  console.log(123);
+  try {
+    const user = _user2.default.findById(payload._id);
+
+    if (!user) {
+      return done(null, false);
+    }
+
+    return done(null, user);
+  } catch (err) {
+    return done(err, false);
+  }
+});
+
+// passport apply local strategy
+_passport2.default.use(localStrategy);
+_passport2.default.use(jwtStrategy);
+
+const authLocal = exports.authLocal = _passport2.default.authenticate('local', { session: false });
+const authJwt = exports.authJwt = _passport2.default.authenticate('jwt', { session: false });
 
 /***/ }),
 /* 18 */
@@ -619,7 +619,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.sigup = sigup;
 exports.login = login;
 
-var _user = __webpack_require__(6);
+var _user = __webpack_require__(5);
 
 var _user2 = _interopRequireDefault(_user);
 
@@ -639,6 +639,125 @@ function login(req, res, next) {
 
   return next();
 };
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _express = __webpack_require__(1);
+
+var _post = __webpack_require__(25);
+
+const routes = new _express.Router();
+
+routes.post('/', _post.createPost);
+
+exports.default = routes;
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createPost = createPost;
+
+var _post = __webpack_require__(26);
+
+var _post2 = _interopRequireDefault(_post);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+async function createPost(req, res) {
+  try {
+    const post = await _post2.default.create(req.body);
+
+    return res.status(201).json(post);
+  } catch (err) {
+    return res.status(400).json(err);
+  }
+}
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _mongoose = __webpack_require__(2);
+
+var _mongoose2 = _interopRequireDefault(_mongoose);
+
+var _nodeSlug = __webpack_require__(27);
+
+var _nodeSlug2 = _interopRequireDefault(_nodeSlug);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const PostSchema = new _mongoose.Schema({
+  title: {
+    type: String,
+    unique: true,
+    trim: true,
+    required: [true, 'title info not empty!'],
+    minlength: [3, 'title min length is 3!']
+  },
+  text: {
+    type: String,
+    trim: true,
+    required: [true, 'text info not empty!'],
+    minlength: [10, 'text min length is 10!']
+  },
+  slug: {
+    type: String,
+    trim: true,
+    lowercase: true
+  },
+  user: {
+    type: _mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  favoriteCount: {
+    type: Number,
+    default: 0
+  }
+}, { timestamps: true });
+
+PostSchema.pre('validator', function (next) {
+  this.title = this._slugify(this.title);
+
+  next();
+});
+
+PostSchema.methods = {
+  _slugify(title) {
+    return (0, _nodeSlug2.default)(title);
+  }
+};
+
+exports.default = _mongoose2.default.model('Post', PostSchema);
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports) {
+
+module.exports = require("node-slug");
 
 /***/ })
 /******/ ]);
