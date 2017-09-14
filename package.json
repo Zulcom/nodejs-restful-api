@@ -22,6 +22,7 @@
     "joi": "^10.6.0",
     "jsonwebtoken": "^8.0.0",
     "mongoose": "^4.11.10",
+    "node-slug": "^0.0.2",
     "nodemon": "^1.12.0",
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.0",

@@ -3055,6 +3055,12 @@ node-pre-gyp@^0.6.36:
     tar "^2.2.1"
     tar-pack "^3.4.0"
 
+node-slug@^0.0.2:
+  version "0.0.2"
+  resolved "http://registry.npm.taobao.org/node-slug/download/node-slug-0.0.2.tgz#cdd0a0920381901abfc369eb57a6e24b1ed6ddca"
+  dependencies:
+    unidecode "^0.1.3"
+
 nodemon@^1.12.0:
   version "1.12.0"
   resolved "http://registry.npm.taobao.org/nodemon/download/nodemon-1.12.0.tgz#e538548a777340a19f855c4f087b7e528aa3feda"
@@ -4178,6 +4184,10 @@ uid-number@^0.0.6:
 undefsafe@0.0.3:
   version "0.0.3"
   resolved "http://registry.npm.taobao.org/undefsafe/download/undefsafe-0.0.3.tgz#ecca3a03e56b9af17385baac812ac83b994a962f"
+
+unidecode@^0.1.3:
+  version "0.1.8"
+  resolved "http://registry.npm.taobao.org/unidecode/download/unidecode-0.1.8.tgz#efbb301538bc45246a9ac8c559d72f015305053e"
 
 unique-string@^1.0.0:
   version "1.0.0"
