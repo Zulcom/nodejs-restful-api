@@ -468,13 +468,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _express = __webpack_require__(1);
 
-var _expressValidation = __webpack_require__(15);
-
-var _expressValidation2 = _interopRequireDefault(_expressValidation);
-
 var _user = __webpack_require__(4);
 
 var _auth = __webpack_require__(17);
+
+var _expressValidation = __webpack_require__(15);
+
+var _expressValidation2 = _interopRequireDefault(_expressValidation);
 
 var _user2 = __webpack_require__(23);
 
@@ -664,9 +664,17 @@ var _post = __webpack_require__(25);
 
 var _auth = __webpack_require__(17);
 
+var _post2 = __webpack_require__(33);
+
+var _expressValidation = __webpack_require__(15);
+
+var _expressValidation2 = _interopRequireDefault(_expressValidation);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 const routes = new _express.Router();
 
-routes.post('/', _auth.authJwt, _post.createPost);
+routes.post('/', _auth.authJwt, (0, _expressValidation2.default)(_post2.createPostValidator), _post.createPost);
 
 exports.default = routes;
 
@@ -2644,6 +2652,31 @@ function get(object, path, defaultValue) {
 
 module.exports = get;
 
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createPostValidator = undefined;
+
+var _joi = __webpack_require__(16);
+
+var _joi2 = _interopRequireDefault(_joi);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const createPostValidator = exports.createPostValidator = {
+  body: {
+    title: _joi2.default.string().min(3).required(),
+    text: _joi2.default.string().min(10).required()
+  }
+};
 
 /***/ })
 /******/ ]);

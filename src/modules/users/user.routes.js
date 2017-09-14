@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import validate from 'express-validation';
 import { sigup } from './user.validator';
 import { authLocal } from '../../services/auth.services';
+import validate from 'express-validation';
 
 import * as userControllers from './user.controllers';
 
