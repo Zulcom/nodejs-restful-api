@@ -1,3 +1,4 @@
+import HTTPStatus from 'http-status';
 import Post from './post.model';
 
 export async function createPost (req, res) {
@@ -7,8 +8,18 @@ export async function createPost (req, res) {
 
     const post = await Post.createPost(req.body, userID);
 
-    return res.status(201).json(post);
+    return res.status(HTTPStatus.CREATED).json(post);
   } catch (err) {
-    return res.status(400).json(err);
+    return res.status(HTTPStatus.BAD_REQUEST).json(err);
+  }
+}
+
+export async function getPost (req, res) {
+  try {
+    const post = await Post.findById(req.params.id).populate('user');
+
+    return res.status(HTTPStatus.OK).json(post);
+  } catch (err) {
+    return res.status(HTTPStatus.NOT_FOUND).json(err);
   }
 }

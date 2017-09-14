@@ -47,6 +47,17 @@ PostSchema.methods = {
   // post title transform slug
   _slugify (title) {
     return slug(title);
+  },
+  toJSON () {
+    return {
+      _id: this._id,
+      createdAt: this.createdAt,
+      title: this.title,
+      slug: this.slug,
+      text: this.text,
+      user: this.user,
+      favoriteCount: this.favoriteCount
+    };
   }
 };
 

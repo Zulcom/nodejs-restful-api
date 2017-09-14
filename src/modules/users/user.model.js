@@ -77,6 +77,12 @@ userSchema.methods = {
       userName: this.userName,
       token: `JWT ${this.createToken()}`
     };
+  },
+  toJSON () {
+    return {
+      _id: this.id,
+      userName: this.userName
+    };
   }
 };
 

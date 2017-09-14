@@ -1,16 +1,18 @@
+import HTTPStatus from 'http-status';
 import User from './user.model';
 
 export async function sigup (req, res) {
   try {
     const user = await User.create(req.body);
-    return res.status(201).json(user);
+
+    return res.status(HTTPStatus.CREATED).json(user.toAuthJSON());
   } catch (error) {
-    return res.status(400).json(error);
+    return res.status(HTTPStatus.BAD_REQUEST).json(error);
   }
 };
 
 export function login (req, res, next) {
-  res.status(200).json(req.user.toAuthJSON());
+  res.status(HTTPStatus.OK).json(req.user.toAuthJSON());
 
   return next();
 };

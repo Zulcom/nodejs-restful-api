@@ -19,6 +19,7 @@
     "express": "^4.15.4",
     "express-validation": "^1.0.2",
     "helmet": "^3.8.1",
+    "http-status": "^1.0.1",
     "joi": "^10.6.0",
     "jsonwebtoken": "^8.0.0",
     "mongoose": "^4.11.10",
