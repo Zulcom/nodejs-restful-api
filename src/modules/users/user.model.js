@@ -101,6 +101,12 @@ userSchema.methods = {
         await Post.incFavoriteCount(postID);
       }
       return this.save();
+    },
+    isFavorited (postID) {
+      if (!this.favorites.posts.indexOf(postID)) {
+        return true;
+      }
+      return false;
     }
   }
 };

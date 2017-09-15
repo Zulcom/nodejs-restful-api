@@ -17,10 +17,22 @@ export async function createPost (req, res) {
 
 export async function getPost (req, res) {
   try {
-    const post = await Post.findById(req.params.id).populate('user');
+    const promise = await Promise.all([
+      User.findById(req.user._conditions._id),
+      Post.findById(req.params.id).populate('user')
+    ]);
 
-    return res.status(HTTPStatus.OK).json(post);
+    const isFavorited = promise[0].changeFavorites.isFavorited(req.params.id);
+    const post = promise[1].toJSON();
+
+    const sendInfo = {
+      ...post,
+      isFavorited
+    };
+
+    return res.status(HTTPStatus.OK).json(sendInfo);
   } catch (err) {
+    console.log(err);
     return res.status(HTTPStatus.NOT_FOUND).json(err);
   }
 };
@@ -30,7 +42,20 @@ export async function getPosts (req, res) {
     const limit = parseInt(req.query.limit, 0);
     const skip = parseInt(req.query.skip, 0);
 
-    const posts = await Post.getPostsList({ skip, limit });
+    const promise = await Promise.all([
+      User.findById(req.user._conditions._id),
+      Post.getPostsList({ skip, limit })
+    ]);
+
+    const posts = promise[1].reduce((arr, post) => {
+      const isFavorited = promise[0].changeFavorites.isFavorited(post._id);
+      arr.push({
+        ...post.toJSON(),
+        isFavorited
+      });
+
+      return arr;
+    }, []);
 
     return res.status(HTTPStatus.OK).json(posts);
   } catch (err) {

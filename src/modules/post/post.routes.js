@@ -7,8 +7,8 @@ import validate from 'express-validation';
 const routes = new Router();
 
 routes.post('/', authJwt, validate(createPostValidator), createPost);
-routes.get('/:id', getPost);
-routes.get('/', getPosts);
+routes.get('/:id', authJwt, getPost);
+routes.get('/', authJwt, getPosts);
 routes.patch('/:id', authJwt, validate(updatePostValidator), updatePost);
 routes.delete('/:id', authJwt, deletePost);
 routes.delete('/:id/favorite', authJwt, favoritePost);

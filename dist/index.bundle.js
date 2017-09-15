@@ -249,6 +249,12 @@ userSchema.methods = {
         await _post2.default.incFavoriteCount(postID);
       }
       return this.save();
+    },
+    isFavorited(postID) {
+      if (!this.favorites.posts.indexOf(postID)) {
+        return true;
+      }
+      return false;
     }
   }
 };
@@ -720,8 +726,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const routes = new _express.Router();
 
 routes.post('/', _auth.authJwt, (0, _expressValidation2.default)(_post2.createPostValidator), _post.createPost);
-routes.get('/:id', _post.getPost);
-routes.get('/', _post.getPosts);
+routes.get('/:id', _auth.authJwt, _post.getPost);
+routes.get('/', _auth.authJwt, _post.getPosts);
 routes.patch('/:id', _auth.authJwt, (0, _expressValidation2.default)(_post2.updatePostValidator), _post.updatePost);
 routes.delete('/:id', _auth.authJwt, _post.deletePost);
 routes.delete('/:id/favorite', _auth.authJwt, _post.favoritePost);
@@ -774,10 +780,18 @@ async function createPost(req, res) {
 
 async function getPost(req, res) {
   try {
-    const post = await _post2.default.findById(req.params.id).populate('user');
+    const promise = await Promise.all([_user2.default.findById(req.user._conditions._id), _post2.default.findById(req.params.id).populate('user')]);
 
-    return res.status(_httpStatus2.default.OK).json(post);
+    const isFavorited = promise[0].changeFavorites.isFavorited(req.params.id);
+    const post = promise[1].toJSON();
+
+    const sendInfo = Object.assign({}, post, {
+      isFavorited
+    });
+
+    return res.status(_httpStatus2.default.OK).json(sendInfo);
   } catch (err) {
+    console.log(err);
     return res.status(_httpStatus2.default.NOT_FOUND).json(err);
   }
 };
@@ -787,7 +801,16 @@ async function getPosts(req, res) {
     const limit = parseInt(req.query.limit, 0);
     const skip = parseInt(req.query.skip, 0);
 
-    const posts = await _post2.default.getPostsList({ skip, limit });
+    const promise = await Promise.all([_user2.default.findById(req.user._conditions._id), _post2.default.getPostsList({ skip, limit })]);
+
+    const posts = promise[1].reduce((arr, post) => {
+      const isFavorited = promise[0].changeFavorites.isFavorited(post._id);
+      arr.push(Object.assign({}, post.toJSON(), {
+        isFavorited
+      }));
+
+      return arr;
+    }, []);
 
     return res.status(_httpStatus2.default.OK).json(posts);
   } catch (err) {
