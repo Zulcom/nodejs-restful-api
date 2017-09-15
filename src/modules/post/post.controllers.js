@@ -12,7 +12,7 @@ export async function createPost (req, res) {
   } catch (err) {
     return res.status(HTTPStatus.BAD_REQUEST).json(err);
   }
-}
+};
 
 export async function getPost (req, res) {
   try {
@@ -22,4 +22,17 @@ export async function getPost (req, res) {
   } catch (err) {
     return res.status(HTTPStatus.NOT_FOUND).json(err);
   }
-}
+};
+
+export async function getPosts (req, res) {
+  try {
+    const limit = parseInt(req.query.limit, 0);
+    const skip = parseInt(req.query.skip, 0);
+
+    const posts = await Post.getPostsList({ skip, limit });
+
+    return res.status(HTTPStatus.OK).json(posts);
+  } catch (err) {
+    return res.status(HTTPStatus.BAD_REQUEST).json(err);
+  }
+};

@@ -9,7 +9,7 @@
     "dev:build": "webpack -w",
     "dev": "cross-env NODE_ENV=development nodemon dist/index.bundle.js",
     "lint": "eslint .",
-    "lint:fix": "yarn lint -- --fix"
+    "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",

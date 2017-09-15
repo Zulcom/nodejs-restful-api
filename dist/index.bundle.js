@@ -693,6 +693,7 @@ const routes = new _express.Router();
 
 routes.post('/', _auth.authJwt, (0, _expressValidation2.default)(_post2.createPostValidator), _post.createPost);
 routes.get('/:id', _post.getPost);
+routes.get('/', _post.getPosts);
 
 exports.default = routes;
 
@@ -708,6 +709,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.createPost = createPost;
 exports.getPost = getPost;
+exports.getPosts = getPosts;
 
 var _httpStatus = __webpack_require__(30);
 
@@ -730,7 +732,7 @@ async function createPost(req, res) {
   } catch (err) {
     return res.status(_httpStatus2.default.BAD_REQUEST).json(err);
   }
-}
+};
 
 async function getPost(req, res) {
   try {
@@ -740,7 +742,20 @@ async function getPost(req, res) {
   } catch (err) {
     return res.status(_httpStatus2.default.NOT_FOUND).json(err);
   }
-}
+};
+
+async function getPosts(req, res) {
+  try {
+    const limit = parseInt(req.query.limit, 0);
+    const skip = parseInt(req.query.skip, 0);
+
+    const posts = await _post2.default.getPostsList({ skip, limit });
+
+    return res.status(_httpStatus2.default.OK).json(posts);
+  } catch (err) {
+    return res.status(_httpStatus2.default.BAD_REQUEST).json(err);
+  }
+};
 
 /***/ }),
 /* 27 */
@@ -832,6 +847,9 @@ PostSchema.statics = {
     return this.create(Object.assign({}, post, {
       user
     }));
+  },
+  getPostsList({ skip = 0, limit = 5 } = {}) {
+    return this.find().sort({ createdAt: -1 }).skip(skip).limit(limit).populate('user');
   }
 };
 
