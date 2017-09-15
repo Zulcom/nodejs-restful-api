@@ -75,6 +75,12 @@ PostSchema.statics = {
       .skip(skip)
       .limit(limit)
       .populate('user');
+  },
+  incFavoriteCount (postID) {
+    return this.findByIdAndUpdate(postID, { $inc: { favoriteCount: 1 } });
+  },
+  decFavoriteCount (postID) {
+    return this.findByIdAndUpdate(postID, { $inc: { favoriteCount: -1 } });
   }
 };
 

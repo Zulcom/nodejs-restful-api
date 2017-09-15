@@ -120,12 +120,149 @@ module.exports = require("mongoose");
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _mongoose = __webpack_require__(2);
+
+var _mongoose2 = _interopRequireDefault(_mongoose);
+
+var _validator = __webpack_require__(22);
+
+var _validator2 = _interopRequireDefault(_validator);
+
+var _user = __webpack_require__(5);
+
+var _bcryptNodejs = __webpack_require__(23);
+
+var _jsonwebtoken = __webpack_require__(24);
+
+var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
+
+var _mongooseUniqueValidator = __webpack_require__(8);
+
+var _mongooseUniqueValidator2 = _interopRequireDefault(_mongooseUniqueValidator);
+
+var _constants = __webpack_require__(0);
+
+var _constants2 = _interopRequireDefault(_constants);
+
+var _post = __webpack_require__(28);
+
+var _post2 = _interopRequireDefault(_post);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const userSchema = new _mongoose.Schema({
+  email: {
+    type: String,
+    unique: true,
+    trim: true,
+    required: [true, 'Email is not empty!'],
+    validate: {
+      validator(email) {
+        return _validator2.default.isEmail(email);
+      },
+      massage: '{VALUE} is not valid!'
+    }
+  },
+  userName: {
+    type: String,
+    trim: true,
+    maxlength: [25, 'User Name is max length 25'],
+    required: [true, 'User Name is not empty!']
+  },
+  password: {
+    type: String,
+    trim: true,
+    required: [true, 'Password is not empty!'],
+    minlength: [6, 'Password is min length 6'],
+    validate: {
+      validator(password) {
+        return _user.passwordRegExp.test(password);
+      },
+      message: '{VALUE} is not valid!'
+    }
+  },
+  favorites: {
+    posts: [{
+      type: _mongoose.Schema.Types.ObjectId,
+      ref: 'Post'
+    }]
+  }
+}, { timestamps: true });
+
+userSchema.plugin(_mongooseUniqueValidator2.default, {
+  message: '{VALUE} already taken!'
+});
+
+// Schema save modified password
+userSchema.pre('save', function (next) {
+  if (this.isModified('password')) {
+    this.password = this._hashPassword(this.password);
+  }
+  next();
+});
+
+userSchema.methods = {
+  // password bcrypt hash password
+  _hashPassword(password) {
+    return (0, _bcryptNodejs.hashSync)(password);
+  },
+  // compare passsword authenticate user info
+  comparePassword(password) {
+    return (0, _bcryptNodejs.compareSync)(password, this.password);
+  },
+  // sign jwt web token for user id
+  createToken() {
+    return _jsonwebtoken2.default.sign({
+      _id: this.id
+    }, _constants2.default.JWT_SECRET);
+  },
+  // login response json data
+  toAuthJSON() {
+    return {
+      _id: this.id,
+      userName: this.userName,
+      token: `JWT ${this.createToken()}`
+    };
+  },
+  toJSON() {
+    return {
+      _id: this.id,
+      userName: this.userName
+    };
+  },
+  changeFavorites: {
+    async posts(postID) {
+      if (!this.favorites.posts.indexOf(postID)) {
+        this.favorites.posts.remove(postID);
+        await _post2.default.decFavoriteCount(postID);
+      } else {
+        this.favorites.posts.push(postID);
+        await _post2.default.incFavoriteCount(postID);
+      }
+      return this.save();
+    }
+  }
+};
+
+exports.default = _mongoose2.default.model('User', userSchema);
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports) {
 
 module.exports = require("passport");
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -136,7 +273,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.sigup = exports.passwordRegExp = undefined;
 
-var _joi = __webpack_require__(5);
+var _joi = __webpack_require__(6);
 
 var _joi2 = _interopRequireDefault(_joi);
 
@@ -154,13 +291,13 @@ const sigup = exports.sigup = {
 };
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports) {
 
 module.exports = require("joi");
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -171,7 +308,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.authJwt = exports.authLocal = undefined;
 
-var _passport = __webpack_require__(3);
+var _passport = __webpack_require__(4);
 
 var _passport2 = _interopRequireDefault(_passport);
 
@@ -181,7 +318,7 @@ var _passportLocal2 = _interopRequireDefault(_passportLocal);
 
 var _passportJwt = __webpack_require__(21);
 
-var _user = __webpack_require__(7);
+var _user = __webpack_require__(3);
 
 var _user2 = _interopRequireDefault(_user);
 
@@ -238,121 +375,6 @@ _passport2.default.use(jwtStrategy);
 
 const authLocal = exports.authLocal = _passport2.default.authenticate('local', { session: false });
 const authJwt = exports.authJwt = _passport2.default.authenticate('jwt', { session: false });
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _mongoose = __webpack_require__(2);
-
-var _mongoose2 = _interopRequireDefault(_mongoose);
-
-var _validator = __webpack_require__(22);
-
-var _validator2 = _interopRequireDefault(_validator);
-
-var _user = __webpack_require__(4);
-
-var _bcryptNodejs = __webpack_require__(23);
-
-var _jsonwebtoken = __webpack_require__(24);
-
-var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
-
-var _mongooseUniqueValidator = __webpack_require__(8);
-
-var _mongooseUniqueValidator2 = _interopRequireDefault(_mongooseUniqueValidator);
-
-var _constants = __webpack_require__(0);
-
-var _constants2 = _interopRequireDefault(_constants);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-const userSchema = new _mongoose.Schema({
-  email: {
-    type: String,
-    unique: true,
-    trim: true,
-    required: [true, 'Email is not empty!'],
-    validate: {
-      validator(email) {
-        return _validator2.default.isEmail(email);
-      },
-      massage: '{VALUE} is not valid!'
-    }
-  },
-  userName: {
-    type: String,
-    trim: true,
-    maxlength: [25, 'User Name is max length 25'],
-    required: [true, 'User Name is not empty!']
-  },
-  password: {
-    type: String,
-    trim: true,
-    required: [true, 'Password is not empty!'],
-    minlength: [6, 'Password is min length 6'],
-    validate: {
-      validator(password) {
-        return _user.passwordRegExp.test(password);
-      },
-      message: '{VALUE} is not valid!'
-    }
-  }
-}, { timestamps: true });
-
-userSchema.plugin(_mongooseUniqueValidator2.default, {
-  message: '{VALUE} already taken!'
-});
-
-// Schema save modified password
-userSchema.pre('save', function (next) {
-  if (this.isModified('password')) {
-    this.password = this._hashPassword(this.password);
-  }
-  next();
-});
-
-userSchema.methods = {
-  // password bcrypt hash password
-  _hashPassword(password) {
-    return (0, _bcryptNodejs.hashSync)(password);
-  },
-  // compare passsword authenticate user info
-  comparePassword(password) {
-    return (0, _bcryptNodejs.compareSync)(password, this.password);
-  },
-  // sign jwt web token for user id
-  createToken() {
-    return _jsonwebtoken2.default.sign({
-      _id: this.id
-    }, _constants2.default.JWT_SECRET);
-  },
-  // login response json data
-  toAuthJSON() {
-    return {
-      _id: this.id,
-      userName: this.userName,
-      token: `JWT ${this.createToken()}`
-    };
-  },
-  toJSON() {
-    return {
-      _id: this.id,
-      userName: this.userName
-    };
-  }
-};
-
-exports.default = _mongoose2.default.model('User', userSchema);
 
 /***/ }),
 /* 8 */
@@ -454,7 +476,7 @@ var _morgan = __webpack_require__(16);
 
 var _morgan2 = _interopRequireDefault(_morgan);
 
-var _passport = __webpack_require__(3);
+var _passport = __webpack_require__(4);
 
 var _passport2 = _interopRequireDefault(_passport);
 
@@ -578,9 +600,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _express = __webpack_require__(1);
 
-var _user = __webpack_require__(4);
+var _user = __webpack_require__(5);
 
-var _auth = __webpack_require__(6);
+var _auth = __webpack_require__(7);
 
 var _expressValidation = __webpack_require__(9);
 
@@ -648,7 +670,7 @@ var _httpStatus = __webpack_require__(10);
 
 var _httpStatus2 = _interopRequireDefault(_httpStatus);
 
-var _user = __webpack_require__(7);
+var _user = __webpack_require__(3);
 
 var _user2 = _interopRequireDefault(_user);
 
@@ -685,7 +707,7 @@ var _express = __webpack_require__(1);
 
 var _post = __webpack_require__(27);
 
-var _auth = __webpack_require__(6);
+var _auth = __webpack_require__(7);
 
 var _post2 = __webpack_require__(30);
 
@@ -702,6 +724,7 @@ routes.get('/:id', _post.getPost);
 routes.get('/', _post.getPosts);
 routes.patch('/:id', _auth.authJwt, (0, _expressValidation2.default)(_post2.updatePostValidator), _post.updatePost);
 routes.delete('/:id', _auth.authJwt, _post.deletePost);
+routes.delete('/:id/favorite', _auth.authJwt, _post.favoritePost);
 
 exports.default = routes;
 
@@ -720,6 +743,7 @@ exports.getPost = getPost;
 exports.getPosts = getPosts;
 exports.updatePost = updatePost;
 exports.deletePost = deletePost;
+exports.favoritePost = favoritePost;
 
 var _httpStatus = __webpack_require__(10);
 
@@ -728,6 +752,10 @@ var _httpStatus2 = _interopRequireDefault(_httpStatus);
 var _post = __webpack_require__(28);
 
 var _post2 = _interopRequireDefault(_post);
+
+var _user = __webpack_require__(3);
+
+var _user2 = _interopRequireDefault(_user);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -800,6 +828,18 @@ async function deletePost(req, res) {
 
     return res.sendStatus(_httpStatus2.default.OK);
   } catch (err) {
+    return res.status(_httpStatus2.default.BAD_REQUEST).json(err);
+  }
+};
+
+async function favoritePost(req, res) {
+  try {
+    const user = await _user2.default.findById(req.user._conditions._id);
+    await user.changeFavorites.posts(req.params.id);
+
+    return res.sendStatus(_httpStatus2.default.OK);
+  } catch (err) {
+    console.log(err);
     return res.status(_httpStatus2.default.BAD_REQUEST).json(err);
   }
 }
@@ -897,6 +937,12 @@ PostSchema.statics = {
   },
   getPostsList({ skip = 0, limit = 5 } = {}) {
     return this.find().sort({ createdAt: -1 }).skip(skip).limit(limit).populate('user');
+  },
+  incFavoriteCount(postID) {
+    return this.findByIdAndUpdate(postID, { $inc: { favoriteCount: 1 } });
+  },
+  decFavoriteCount(postID) {
+    return this.findByIdAndUpdate(postID, { $inc: { favoriteCount: -1 } });
   }
 };
 
@@ -920,7 +966,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.updatePostValidator = exports.createPostValidator = undefined;
 
-var _joi = __webpack_require__(5);
+var _joi = __webpack_require__(6);
 
 var _joi2 = _interopRequireDefault(_joi);
 

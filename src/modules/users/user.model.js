@@ -6,6 +6,7 @@ import jwtToken from 'jsonwebtoken';
 import uniqueValidator from 'mongoose-unique-validator';
 
 import constants from '../../config/constants';
+import Post from '../post/post.model';
 
 const userSchema = new Schema({
   email: {
@@ -37,6 +38,12 @@ const userSchema = new Schema({
       },
       message: '{VALUE} is not valid!'
     }
+  },
+  favorites: {
+    posts: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Post'
+    }]
   }
 }, { timestamps: true });
 
@@ -83,6 +90,18 @@ userSchema.methods = {
       _id: this.id,
       userName: this.userName
     };
+  },
+  changeFavorites: {
+    async posts (postID) {
+      if (!this.favorites.posts.indexOf(postID)) {
+        this.favorites.posts.remove(postID);
+        await Post.decFavoriteCount(postID);
+      } else {
+        this.favorites.posts.push(postID);
+        await Post.incFavoriteCount(postID);
+      }
+      return this.save();
+    }
   }
 };
 
