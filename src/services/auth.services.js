@@ -35,19 +35,22 @@ const jwtOptions = {
   secretOrKey: constants.JWT_SECRET
 };
 
-const jwtStrategy = new JWTStrategy(jwtOptions, async (payload, done) => {
-  try {
-    const user = User.findById(payload._id);
+const jwtStrategy = new JWTStrategy(
+  jwtOptions,
+  async (payload, done) => {
+    try {
+      const user = User.findById(payload._id);
 
-    if (!user) {
-      return done(null, false);
+      if (!user) {
+        return done(null, false);
+      }
+
+      return done(null, user);
+    } catch (err) {
+      return done(err, false);
     }
-
-    return done(null, user);
-  } catch (err) {
-    return done(err, false);
   }
-});
+);
 
 // passport apply local strategy
 passport.use(localStrategy);

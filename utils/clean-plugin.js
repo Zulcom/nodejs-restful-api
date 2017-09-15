@@ -2,6 +2,11 @@
 
 const del = require('del');
 
+/*
+  del eg:
+  del.sync(['files', '!file.js'])
+*/
+
 class CleanPlugin {
   constructor (options) {
     this.options = options;

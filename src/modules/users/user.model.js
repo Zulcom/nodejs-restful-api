@@ -85,6 +85,7 @@ userSchema.methods = {
       token: `JWT ${this.createToken()}`
     };
   },
+  // default return info
   toJSON () {
     return {
       _id: this.id,
@@ -92,6 +93,10 @@ userSchema.methods = {
     };
   },
   changeFavorites: {
+    /**
+     * favorite event
+     * @param {String} postID 
+     */
     async posts (postID) {
       if (!this.favorites.posts.indexOf(postID)) {
         this.favorites.posts.remove(postID);
@@ -102,6 +107,11 @@ userSchema.methods = {
       }
       return this.save();
     },
+    /**
+     * getpsot and getposts user is favorited
+     * @param {String} postID 
+     * @return {Boolean}
+     */
     isFavorited (postID) {
       if (!this.favorites.posts.indexOf(postID)) {
         return true;

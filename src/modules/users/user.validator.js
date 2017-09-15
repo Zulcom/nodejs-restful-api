@@ -10,3 +10,10 @@ export const sigup = {
     password: Joi.string().min(6).regex(passwordRegExp).required()
   }
 };
+
+export const login = {
+  body: {
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required()
+  }
+};
