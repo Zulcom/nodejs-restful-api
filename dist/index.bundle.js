@@ -700,7 +700,8 @@ const routes = new _express.Router();
 routes.post('/', _auth.authJwt, (0, _expressValidation2.default)(_post2.createPostValidator), _post.createPost);
 routes.get('/:id', _post.getPost);
 routes.get('/', _post.getPosts);
-routes.patch('/:id', _auth.authJwt, _post.updatePost);
+routes.patch('/:id', _auth.authJwt, (0, _expressValidation2.default)(_post2.updatePostValidator), _post.updatePost);
+routes.delete('/:id', _auth.authJwt, _post.deletePost);
 
 exports.default = routes;
 
@@ -718,6 +719,7 @@ exports.createPost = createPost;
 exports.getPost = getPost;
 exports.getPosts = getPosts;
 exports.updatePost = updatePost;
+exports.deletePost = deletePost;
 
 var _httpStatus = __webpack_require__(10);
 
@@ -785,6 +787,22 @@ async function updatePost(req, res) {
     return res.status(_httpStatus2.default.BAD_REQUEST).json(err);
   }
 };
+
+async function deletePost(req, res) {
+  try {
+    const post = await _post2.default.findById(req.params.id);
+
+    if (!post.user.equals(req.user._conditions._id)) {
+      return res.sendStatus(_httpStatus2.default.UNAUTHORIZED);
+    }
+
+    await post.remove();
+
+    return res.sendStatus(_httpStatus2.default.OK);
+  } catch (err) {
+    return res.status(_httpStatus2.default.BAD_REQUEST).json(err);
+  }
+}
 
 /***/ }),
 /* 28 */
@@ -900,7 +918,7 @@ module.exports = require("slug");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createPostValidator = undefined;
+exports.updatePostValidator = exports.createPostValidator = undefined;
 
 var _joi = __webpack_require__(5);
 
@@ -912,6 +930,13 @@ const createPostValidator = exports.createPostValidator = {
   body: {
     title: _joi2.default.string().min(3).required(),
     text: _joi2.default.string().min(10).required()
+  }
+};
+
+const updatePostValidator = exports.updatePostValidator = {
+  body: {
+    title: _joi2.default.string().min(3),
+    text: _joi2.default.string().min(10)
   }
 };
 
