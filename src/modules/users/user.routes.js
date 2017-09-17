@@ -1,8 +1,8 @@
 import { Router } from 'express';
+import { authLocal } from '../../services/auth.services';
+import validate from 'express-validation';
 import * as userControllers from './user.controllers';
 import * as validator from './user.validator';
-import validate from 'express-validation';
-import { authLocal } from '../../services/auth.services';
 
 const routes = new Router();
 

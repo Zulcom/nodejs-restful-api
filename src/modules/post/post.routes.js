@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import * as postControllers from './post.controllers';
 import { authJwt } from '../../services/auth.services';
-import * as validatior from './post.validatior';
 import validate from 'express-validation';
+import * as postControllers from './post.controllers';
+import * as validatior from './post.validatior';
 
 const routes = new Router();
 

@@ -1,19 +1,19 @@
 import mongoose, { Schema } from 'mongoose';
-import slug from 'slug';
 import uniqueValidator from 'mongoose-unique-validator';
+import slug from 'slug';
 
 const PostSchema = new Schema({
   title: {
     type: String,
     unique: true,
     trim: true,
-    required: [true, 'title info not empty!'],
+    required: [true, 'title must not be empty!'],
     minlength: [3, 'title min length is 3!']
   },
   text: {
     type: String,
     trim: true,
-    required: [true, 'text info not empty!'],
+    required: [true, 'text must not be empty!'],
     minlength: [10, 'text min length is 10!']
   },
   slug: {
@@ -48,6 +48,8 @@ PostSchema.methods = {
   _slugify (title) {
     return slug(title);
   },
+
+  // return json data
   toJSON () {
     return {
       _id: this._id,
@@ -69,6 +71,8 @@ PostSchema.statics = {
       user
     });
   },
+
+  // fetch post list query set
   getPostsList ({ skip = 0, limit = 5 } = {}) {
     return this.find()
       .sort({ createdAt: -1 })
@@ -76,9 +80,13 @@ PostSchema.statics = {
       .limit(limit)
       .populate('user');
   },
+
+  // favorite inc
   incFavoriteCount (postID) {
     return this.findByIdAndUpdate(postID, { $inc: { favoriteCount: 1 } });
   },
+
+  // favorite dec
   decFavoriteCount (postID) {
     return this.findByIdAndUpdate(postID, { $inc: { favoriteCount: -1 } });
   }

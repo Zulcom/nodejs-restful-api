@@ -1,7 +1,14 @@
 import HTTPStatus from 'http-status';
+
 import Post from './post.model';
 import User from '../users/user.model';
 
+/**
+ * create post
+ * method: POST /api/v1/posts
+ * req: body and user id
+ * res: 201 or 400
+ */
 export async function createPost (req, res) {
   try {
     // this is user Schema There might be better ways to get it
@@ -11,10 +18,17 @@ export async function createPost (req, res) {
 
     return res.status(HTTPStatus.CREATED).json(post);
   } catch (err) {
+    console.log(err);
     return res.status(HTTPStatus.BAD_REQUEST).json(err);
   }
 };
 
+/**
+ * fetch post
+ * method: GET /api/v1/post/:id
+ * req: user id
+ * res: 200 or 400
+ */
 export async function getPost (req, res) {
   try {
     const promise = await Promise.all([
@@ -33,10 +47,16 @@ export async function getPost (req, res) {
     return res.status(HTTPStatus.OK).json(sendInfo);
   } catch (err) {
     console.log(err);
-    return res.status(HTTPStatus.NOT_FOUND).json(err);
+    return res.status(HTTPStatus.BAD_REQUEST).json(err);
   }
 };
 
+/**
+ * fetch posts
+ * method: GET /api/v1/posts
+ * req: [req query params] and user id
+ * res: 200 or 400
+ */
 export async function getPosts (req, res) {
   try {
     const limit = parseInt(req.query.limit, 0);
@@ -59,10 +79,17 @@ export async function getPosts (req, res) {
 
     return res.status(HTTPStatus.OK).json(posts);
   } catch (err) {
+    console.log(err);
     return res.status(HTTPStatus.BAD_REQUEST).json(err);
   }
 };
 
+/**
+ * update post
+ * method: PATCH /api/v1/posts/:id
+ * req: req params post id and user id
+ * res: 200 or 400
+ */
 export async function updatePost (req, res) {
   try {
     const post = await Post.findById(req.params.id);
@@ -84,6 +111,12 @@ export async function updatePost (req, res) {
   }
 };
 
+/**
+ * delete post
+ * method: DELETE /api/v1/posts/:id
+ * req: req params post id and user id
+ * res: 200 or 400
+ */
 export async function deletePost (req, res) {
   try {
     const post = await Post.findById(req.params.id);
@@ -96,10 +129,17 @@ export async function deletePost (req, res) {
 
     return res.sendStatus(HTTPStatus.OK);
   } catch (err) {
+    console.log(err);
     return res.status(HTTPStatus.BAD_REQUEST).json(err);
   }
 };
 
+/**
+ * favorite post
+ * method: POST /api/v1/posts/:id/favorite
+ * req: req params post id and user id
+ * res: 200 or 400
+ */
 export async function favoritePost (req, res) {
   try {
     const user = await User.findById(req.user._conditions._id);

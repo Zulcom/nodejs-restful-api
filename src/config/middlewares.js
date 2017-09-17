@@ -1,8 +1,8 @@
-import bodyParser from 'body-parser';
 import compression from 'compression';
 import helmet from 'helmet';
-import morgan from 'morgan';
+import bodyParser from 'body-parser';
 import passport from 'passport';
+import morgan from 'morgan';
 
 const isDev = process.env.NODE_ENV === 'development';
 const isProd = process.env.NODE_ENV === 'production';

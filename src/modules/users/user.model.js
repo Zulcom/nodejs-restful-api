@@ -1,11 +1,12 @@
 import mongoose, { Schema } from 'mongoose';
 import validator from 'validator';
-import { passwordRegExp } from './user.validator';
-import { hashSync, compareSync } from 'bcrypt-nodejs';
 import jwtToken from 'jsonwebtoken';
 import uniqueValidator from 'mongoose-unique-validator';
+import { hashSync, compareSync } from 'bcrypt-nodejs';
 
 import constants from '../../config/constants';
+import { passwordRegExp } from './user.validator';
+
 import Post from '../post/post.model';
 
 const userSchema = new Schema({
@@ -13,30 +14,30 @@ const userSchema = new Schema({
     type: String,
     unique: true,
     trim: true,
-    required: [true, 'Email is not empty!'],
+    required: [true, 'Email must not be empty!'],
     validate: {
       validator (email) {
         return validator.isEmail(email);
       },
-      massage: '{VALUE} is not valid!'
+      massage: '{VALUE} format error！'
     }
   },
   userName: {
     type: String,
     trim: true,
     maxlength: [25, 'User Name is max length 25'],
-    required: [true, 'User Name is not empty!']
+    required: [true, 'User Name must not be empty!']
   },
   password: {
     type: String,
     trim: true,
-    required: [true, 'Password is not empty!'],
+    required: [true, 'Password must not be empty!'],
     minlength: [6, 'Password is min length 6'],
     validate: {
       validator (password) {
         return passwordRegExp.test(password);
       },
-      message: '{VALUE} is not valid!'
+      message: '{VALUE} format error！'
     }
   },
   favorites: {
@@ -64,10 +65,12 @@ userSchema.methods = {
   _hashPassword (password) {
     return hashSync(password);
   },
+
   // compare passsword authenticate user info
   comparePassword (password) {
     return compareSync(password, this.password);
   },
+
   // sign jwt web token for user id
   createToken () {
     return jwtToken.sign(
@@ -77,6 +80,7 @@ userSchema.methods = {
       constants.JWT_SECRET
     );
   },
+
   // login response json data
   toAuthJSON () {
     return {
@@ -85,6 +89,7 @@ userSchema.methods = {
       token: `JWT ${this.createToken()}`
     };
   },
+
   // default return info
   toJSON () {
     return {
@@ -92,6 +97,7 @@ userSchema.methods = {
       userName: this.userName
     };
   },
+
   changeFavorites: {
     /**
      * favorite event
@@ -107,6 +113,7 @@ userSchema.methods = {
       }
       return this.save();
     },
+
     /**
      * getpsot and getposts user is favorited
      * @param {String} postID 

@@ -2,7 +2,6 @@ import Joi from 'joi';
 
 export const passwordRegExp = /^(?=.{6,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/;
 
-// sigup request validator schema with joi
 export const sigup = {
   body: {
     email: Joi.string().email().required(),

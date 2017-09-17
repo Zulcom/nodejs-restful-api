@@ -5,12 +5,11 @@ import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt';
 import User from '../modules/users/user.model';
 import constants from '../config/constants';
 
-// Local strategy email replace default username
+// Local strategy
 const localOptions = {
   usernameField: 'email'
 };
 
-// local user login strategy
 const localStrategy = new LocalStrategy(
   localOptions,
   async (email, password, done) => {

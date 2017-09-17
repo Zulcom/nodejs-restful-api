@@ -6,7 +6,10 @@
       "experimentalObjectRestSpread": true
     }
   },
-  "plugins": ["babel", "promise"],
+  "plugins": [
+    "babel",
+    "promise"
+  ],
   "env": {
     "node": true
   },
