@@ -38,7 +38,7 @@ const jwtStrategy = new JWTStrategy(
   jwtOptions,
   async (payload, done) => {
     try {
-      const user = User.findById(payload._id);
+      const user = await User.findById(payload._id);
 
       if (!user) {
         return done(null, false);

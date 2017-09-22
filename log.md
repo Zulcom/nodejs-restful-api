@@ -1,3 +1,7 @@
+## 2017/09/22
+- Because of the previous error, the asynchronous method was not used to authenticate JWT, which resulted in the user data error of the request, which was normal after the relevant asynchronous information was changed.
+- data query mast use async !!!
+
 ## one
 - `+` git init
 - `+` create gitignore

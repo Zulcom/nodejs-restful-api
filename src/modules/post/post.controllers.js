@@ -11,10 +11,7 @@ import User from '../users/user.model';
  */
 export async function createPost (req, res) {
   try {
-    // this is user Schema There might be better ways to get it
-    const userID = req.user._conditions._id;
-
-    const post = await Post.createPost(req.body, userID);
+    const post = await Post.createPost(req.body, req.user._id);
 
     return res.status(HTTPStatus.CREATED).json(post);
   } catch (err) {
@@ -32,7 +29,7 @@ export async function createPost (req, res) {
 export async function getPost (req, res) {
   try {
     const promise = await Promise.all([
-      User.findById(req.user._conditions._id),
+      User.findById(req.user._id),
       Post.findById(req.params.id).populate('user')
     ]);
 
@@ -63,7 +60,7 @@ export async function getPosts (req, res) {
     const skip = parseInt(req.query.skip, 0);
 
     const promise = await Promise.all([
-      User.findById(req.user._conditions._id),
+      User.findById(req.user._id),
       Post.getPostsList({ skip, limit })
     ]);
 
@@ -94,7 +91,7 @@ export async function updatePost (req, res) {
   try {
     const post = await Post.findById(req.params.id);
 
-    if (!post.user.equals(req.user._conditions._id)) {
+    if (!post.user.equals(req.user._id)) {
       return res.sendStatus(HTTPStatus.UNAUTHORIZED);
     }
 
@@ -121,7 +118,7 @@ export async function deletePost (req, res) {
   try {
     const post = await Post.findById(req.params.id);
 
-    if (!post.user.equals(req.user._conditions._id)) {
+    if (!post.user.equals(req.user._id)) {
       return res.sendStatus(HTTPStatus.UNAUTHORIZED);
     }
 
@@ -142,7 +139,7 @@ export async function deletePost (req, res) {
  */
 export async function favoritePost (req, res) {
   try {
-    const user = await User.findById(req.user._conditions._id);
+    const user = await User.findById(req.user._id);
     await user.changeFavorites.posts(req.params.id);
 
     return res.sendStatus(HTTPStatus.OK);
